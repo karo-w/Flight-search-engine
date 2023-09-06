@@ -1,30 +1,49 @@
 import java.util.ArrayList;
+import java.util.Scanner;
 
 class Main{
     public static void main(String[] args)
     {
     FlightDatabase database = new FlightDatabase();
-    database.checkIfFlightExist("Paris", "Madrid");
-    database.displayFlightFromCity("Paris");
-    database.displayFlightToCity("Mardid");
-
-    System.out.println("^nie zadzialalo");
-
-
-    ArrayList<Flight> fromCity = database.getFlightsFromCity("Paris");
-    ArrayList<Flight> toCity = database.getFlightsToCity("Madrid");
-    database.displayFlights(fromCity);
-    database.displayFlights(toCity);
     //wywołanie getCities (lista)
     ArrayList<String> cities = database.getCities();                    //
-    System.out.println(cities);                                         //to jest super sprawa
+    System.out.println("Available cities: "+cities);                    //to jest super sprawa
+
+    System.out.print("Where do you want to fly from? ");
+    Scanner city1 = new Scanner(System.in);
+    String departureCity = city1.nextLine();
+    System.out.print("Where do you want to go? ");
+    Scanner city2 = new Scanner(System.in);
+    String arrivalCity = city2.nextLine();
+    System.out.println("Looking for a flight from "+departureCity+" to "+arrivalCity+ ".");
+
+    city1.close();
+    city2.close();
+
+    //database.checkIfFlightExist("Paris", "Madrid");
+    database.checkIfFlightExist(departureCity, arrivalCity);
+    System.out.println("Departures:");
+    database.displayFlightFromCity(departureCity);
+    System.out.println("Arrivals:");
+    database.displayFlightToCity(arrivalCity);
+
+    //System.out.println("^nie zadzialalo");
+    System.out.print("\n");
+
+    ArrayList<Flight> fromCity = database.getFlightsFromCity(departureCity);
+    ArrayList<Flight> toCity = database.getFlightsToCity(arrivalCity);
+    System.out.println("Departures:");
+    database.displayFlights(fromCity);
+    System.out.println("Arrivals:");
+    database.displayFlights(toCity);
+    
     Flight cheapestFlight = database.getCheapestFlight();
-    System.out.println("The cheapest flight: "+cheapestFlight.getDetails());
+    System.out.println("*The cheapest flight: "+cheapestFlight.getDetails()+"*");
 
-    Flight cheapestFlightFromCity = database.getCheapestFlightFromCity("Paris");
-    System.out.println("The cheapest flight: "+cheapestFlightFromCity.getDetails());
+    Flight cheapestFlightFromCity = database.getCheapestFlightFromCity(departureCity);
+    System.out.println("The cheapest flight from your departure city: "+cheapestFlightFromCity.getDetails());
 
-    ArrayList<Journey> journeys = database.getFlights("Paris", "Tokyo");
+    ArrayList<Journey> journeys = database.getFlights(departureCity, arrivalCity); 
     System.out.println(journeys);
     }
 
@@ -71,10 +90,10 @@ class FlightDatabase {
                 return;                                                     //funkcja void, ale możemy użyć return jako break
             }
         }
-        System.out.println("This flight does not exist");
+        System.out.println("Direct flight does not exist");
     }
 
-    public void displayFlights(ArrayList<Flight> results) {                 //lub tu to nie działa
+    public void displayFlights(ArrayList<Flight> results) {                 //do sprawdzenia
         if (results.isEmpty()) {
             System.out.println("Flight not found!");
         }
@@ -111,7 +130,7 @@ class FlightDatabase {
         ArrayList<Flight> results = getFlightsFromCity(city);
         displayFlights(results);
     }
-    public void displayFlightToCity(String city)                        //ale to nie działa
+    public void displayFlightToCity(String city)                        //do sprawdzenia(?)
     {
         ArrayList<Flight> results = getFlightsToCity(city);
         displayFlights(results);
